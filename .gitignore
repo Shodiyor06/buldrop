@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+frontend/.env.local
+.venv/
+backend/.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.sqlite3
+db.sqlite3
+node_modules/
+.next/
+out/
+backend/staticfiles/
+.DS_Store
