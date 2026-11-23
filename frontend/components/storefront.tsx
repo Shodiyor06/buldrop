@@ -20,6 +20,7 @@ import {
   Variant,
 } from '../lib/api';
 import { money, paymentLabel, statusLabel, ticketStatusLabel } from '../lib/format';
+import Inventory from './inventory';
 import OrderCard from './order-card';
 import ProductCard from './product-card';
 
@@ -571,6 +572,8 @@ export default function Storefront() {
           </p>
         </aside>
       </section>
+
+      {user && <Inventory />}
 
       <section id="faq" className="border-t border-white/5 bg-zinc-950/40">
         <div className="mx-auto grid max-w-7xl gap-8 px-5 py-12 md:grid-cols-2 lg:px-8">

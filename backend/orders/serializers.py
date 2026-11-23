@@ -18,6 +18,8 @@ class OrderItemSerializer(serializers.ModelSerializer):
         delivery = getattr(item.order, 'delivery', None)
         if not delivery or not delivery.details.get('codes_released'):
             return []
+        if item.product.is_skin:
+            return []  # skins land in the buyer's inventory, they are not shown as codes
         return [
             {
                 'external_id': asset.external_id,

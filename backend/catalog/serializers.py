@@ -26,7 +26,7 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
             'id', 'game', 'game_slug', 'supplier', 'name', 'slug', 'description', 'image_url', 'price', 'currency',
-            'fulfillment_type', 'is_active', 'variants', 'rating_average', 'review_count', 'available',
+            'fulfillment_type', 'is_skin', 'coin_price', 'is_active', 'variants', 'rating_average', 'review_count', 'available',
         ]
 
     def get_variants(self, product):

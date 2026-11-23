@@ -1,0 +1,14 @@
+{
+  "name": "buldrop-steam-bot",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": { "start": "node index.js" },
+  "dependencies": {
+    "express": "^4.19.2",
+    "steam-totp": "^2.1.2",
+    "steam-tradeoffer-manager": "^2.10.6",
+    "steam-user": "^5.0.0",
+    "steamcommunity": "^3.48.6"
+  }
+}

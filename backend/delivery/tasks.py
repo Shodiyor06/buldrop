@@ -82,6 +82,7 @@ def _process_test_delivery(delivery, order, attempt, items):
 def _process_live_delivery(delivery, order, attempt, items):
     """Real payment: hand over inventory codes immediately; top-ups/manual goods go to an operator."""
     needs_operator = False
+    skins_granted = 0
     released = []
     for item in items:
         fulfillment = item.product.fulfillment_type
@@ -99,6 +100,12 @@ def _process_live_delivery(delivery, order, attempt, items):
                 attempt.save(update_fields=['status', 'result'])
                 return {'status': 'failed', 'delivery_id': delivery.pk}
             item.reserved_assets.filter(pk__in=[asset.pk for asset in assets]).update(status=InventoryAsset.STATUS_SOLD)
+            if item.product.is_skin:
+                from skins.services import grant_skin
+
+                for asset in assets:
+                    grant_skin(user=order.user, asset=asset, order_item=item)
+                skins_granted += len(assets)
             released.append(item.pk)
         else:
             needs_operator = True
@@ -117,7 +124,11 @@ def _process_live_delivery(delivery, order, attempt, items):
         delivery.details = {
             'mode': 'live',
             'codes_released': bool(released),
-            'message': 'Delivered. Your codes are shown on the order page.',
+            'message': (
+                'Delivered. Your skins are in your inventory: sell them for coins or withdraw them to Steam.'
+                if skins_granted
+                else 'Delivered. Your codes are shown on the order page.'
+            ),
         }
         order.status = Order.STATUS_COMPLETED
         order.save(update_fields=['status', 'updated_at'])

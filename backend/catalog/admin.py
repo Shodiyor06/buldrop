@@ -18,8 +18,8 @@ class SupplierAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'game', 'price', 'currency', 'fulfillment_type', 'is_active']
-    list_filter = ['game', 'fulfillment_type', 'is_active', 'currency']
+    list_display = ['name', 'game', 'price', 'currency', 'is_skin', 'coin_price', 'fulfillment_type', 'is_active']
+    list_filter = ['game', 'fulfillment_type', 'is_skin', 'is_active', 'currency']
     search_fields = ['name', 'slug', 'game__name']
     prepopulated_fields = {'slug': ['name']}
     list_select_related = ['game', 'supplier']

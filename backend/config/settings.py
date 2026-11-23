@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'games',
     'catalog',
     'inventory',
+    'skins',
     'orders',
     'payments',
     'delivery',
@@ -224,3 +225,13 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': 300.0,
     },
 }
+
+# --- Steam skin withdrawals -------------------------------------------------
+# 'manual': withdrawals stay pending until an operator sends the trade and marks it in Django admin.
+# 'bot':    withdrawals are sent to the Steam bot service in /steam-bot (STEAM_BOT_URL) which reports
+#           the result back to /api/v1/steam/webhook/ (signed with STEAM_BOT_WEBHOOK_SECRET).
+STEAM_TRADE_MODE = os.getenv('STEAM_TRADE_MODE', 'manual').lower()
+STEAM_BOT_URL = os.getenv('STEAM_BOT_URL', '').rstrip('/')
+STEAM_BOT_API_KEY = os.getenv('STEAM_BOT_API_KEY', '')
+STEAM_BOT_WEBHOOK_SECRET = os.getenv('STEAM_BOT_WEBHOOK_SECRET', '')
+STEAM_BOT_TIMEOUT = int(os.getenv('STEAM_BOT_TIMEOUT', '15'))

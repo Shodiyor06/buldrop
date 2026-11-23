@@ -44,3 +44,15 @@ export const fulfillmentLabel: Record<string, string> = {
   inventory: 'Raqamli kod',
   manual: 'Operator orqali',
 };
+
+export const coins = (value: string | number) =>
+  `${Number(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(/,/g, ' ')} tanga`;
+
+export const withdrawalLabel: Record<string, string> = {
+  pending: 'Navbatda',
+  sent: 'Steam’da taklif yuborildi — qabul qiling',
+  accepted: 'Steam’ga o‘tkazildi',
+  declined: 'Rad etildi / muddati tugadi',
+  cancelled: 'Bekor qilindi',
+  failed: 'Xatolik',
+};

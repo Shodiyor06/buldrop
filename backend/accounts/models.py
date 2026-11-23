@@ -15,6 +15,8 @@ class User(AbstractUser):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=ROLE_CUSTOMER)
     phone = models.CharField(max_length=32, blank=True, default='')
     avatar_url = models.URLField(blank=True, default='')
+    steam_id = models.CharField(max_length=20, blank=True, default='')
+    steam_trade_url = models.URLField(max_length=300, blank=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

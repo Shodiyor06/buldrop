@@ -12,8 +12,18 @@ BulDrop is a Django REST Framework and Next.js storefront for an administrator-m
 
 ## Not implemented (needs things only you can provide)
 
-- **PlayPay / automatic top-ups** and **Steam skin trades**: no supplier API documentation or credentials were available, so nothing is faked. Top-ups are fulfilled by an operator. `game-accounts/validate/` still reports "unverified".
+- **PlayPay / automatic top-ups**: no supplier API documentation or credentials were available, so nothing is faked. Top-ups are fulfilled by an operator. `game-accounts/validate/` still reports "unverified".
 - Click/Payme could not be tested against the real providers here (tests simulate their protocols). Run each provider's sandbox/test cabinet before taking real money.
+
+## Skins, coins and Steam withdrawals
+
+- A product with `is_skin=True` and a `coin_price` (admin) is a Steam skin. Its `InventoryAsset.external_id` is the Steam **asset id** in the shop bot's inventory (`metadata`: `{"appid": 730, "contextid": "2"}`).
+- After a **real** payment the skin lands in the buyer's inventory (`/api/v1/skins/`). Test payments grant nothing.
+- **Sell for coins**: `POST /api/v1/skins/<id>/sell/` credits exactly the product's `coin_price` to the wallet (`GET /api/v1/wallet/`) and puts the item back on the shop shelf. Every change has a ledger row.
+- **Withdraw to Steam**: the user saves a trade URL (`PATCH /api/v1/me/steam/`), then `POST /api/v1/skins/<id>/withdraw/`. The skin is locked (cannot be sold twice) until the trade is accepted (skin leaves) or fails/declines (skin returns).
+  - `STEAM_TRADE_MODE=manual` (default): an operator sends the trade by hand and uses the actions in admin -> Steam withdrawals.
+  - `STEAM_TRADE_MODE=bot`: Django calls the bot in `steam-bot/`, which sends the offer and reports back to `/api/v1/steam/webhook/` (HMAC `STEAM_BOT_WEBHOOK_SECRET`). The bot needs a dedicated Steam account with Steam Guard (shared/identity secrets) and **has not been tested against live Steam here** - try it with a cheap item first. Run it with `BOT_API_KEY`, `BACKEND_WEBHOOK_URL`, `WEBHOOK_SECRET`, `STEAM_USERNAME`, `STEAM_PASSWORD`, `STEAM_SHARED_SECRET`, `STEAM_IDENTITY_SECRET`.
+- Give a user a skin for testing: `python manage.py grant_skin <username> <product-slug>`.
 
 ## Requirements
 

@@ -35,6 +35,14 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     currency = models.CharField(max_length=8, default='USD')
     fulfillment_type = models.CharField(max_length=20, choices=FULFILLMENT_CHOICES, default=FULFILLMENT_MANUAL)
+    is_skin = models.BooleanField(
+        default=False,
+        help_text='Steam skin: after a paid order it lands in the buyer\'s inventory instead of being shown as a code.',
+    )
+    coin_price = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True,
+        help_text='Fixed price in site coins. A user who sells this skin back receives exactly this amount.',
+    )
     is_active = models.BooleanField(default=True)
     metadata = models.JSONField(default=dict, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -42,6 +50,11 @@ class Product(models.Model):
 
     class Meta:
         ordering = ['name']
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        if self.is_skin and (self.coin_price is None or self.coin_price <= 0):
+            raise ValidationError({'coin_price': 'A skin product needs a coin price greater than zero.'})
 
     def __str__(self):
         return self.name

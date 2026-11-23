@@ -31,6 +31,8 @@ export type Product = {
   price: string;
   currency: string;
   fulfillment_type: 'topup' | 'inventory' | 'manual';
+  is_skin: boolean;
+  coin_price: string | null;
   variants: Variant[];
   rating_average: number | null;
   review_count: number;
@@ -181,3 +183,30 @@ export function newKey() {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
 }
+
+export type Withdrawal = {
+  id: number;
+  skin: number;
+  skin_name: string;
+  status: 'pending' | 'sent' | 'accepted' | 'declined' | 'cancelled' | 'failed';
+  trade_offer_id: string;
+  error: string;
+  created_at: string;
+};
+
+export type Skin = {
+  id: number;
+  name: string;
+  image_url: string;
+  game_slug: string;
+  status: 'in_inventory' | 'withdrawing' | 'withdrawn' | 'sold';
+  sell_price: string | null;
+  sold_price: string | null;
+  withdrawal: Withdrawal | null;
+  created_at: string;
+};
+
+export type WalletInfo = {
+  balance: string;
+  transactions: { id: number; kind: string; amount: string; balance_after: string; description: string; created_at: string }[];
+};
